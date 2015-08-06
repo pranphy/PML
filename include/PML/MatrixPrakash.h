@@ -1,8 +1,8 @@
-/*********************************************/
-/** Author       : @PrakashGautam              */
-/** Date Written : Friday 31st May 2013      */
-/** Last Updated : 16 March 2014,Aug 6, 2015 */
-/*********************************************/
+/********************************************/
+/** Author       : @PrakashGautam           */
+/** Date Written : Friday 31st May 2013     */
+/** Last Updated : 16 March 2014            */
+/********************************************/
 
 /*
 *   A proposed Matrix library to do various matrix operations that can be
@@ -23,6 +23,9 @@
 #define NOCOMMENT
 
 using namespace std;
+
+
+
 
 class Matrix
 {
@@ -78,7 +81,6 @@ Matrix ReflectX(Matrix&);
 
 template<typename T>
 void Swap(T&,T&);
-
 #include "MatrixPrakash.hpp"
 
 #endif // MATRIX_H_INCLUDED
