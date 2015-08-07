@@ -1,5 +1,5 @@
 /*********************************************/
-/** Author       : @PrakashGautam              */
+/** Author       : @PrakashGautam            */
 /** Date Written : Friday 31st May 2013      */
 /** Last Updated : 16 March 2014,Aug 6, 2015 */
 /*********************************************/
@@ -20,28 +20,39 @@
 
 #include<iomanip>
 #include<iostream>
+#include<vector>
+#include<string>
 #define NOCOMMENT
 
 using namespace std;
+template<typename T>
+class Matrix;
 
+template<class T>
+ostream& operator<<(ostream&,Matrix<T>&);
+
+template<class T>
+istream& operator>>(istream&,Matrix<T>&);
+
+template<typename T>
 class Matrix
 {
     private:
         class Proxy
         {
             private:
-                double*Array;
+                vector<T>& Array;
             public:
-                Proxy (double* Arra):Array(Arra){}
-                double& operator[](int index){return Array[index];}
+                Proxy (vector<T>& Arra):Array(Arra){ }
+                T& operator[](int index){return Array[index];}
         };
-        double** Data;
+        vector<vector<T>> Data;
 
     public:
         int Row,Col;
         Matrix(int,int);
         Matrix();
-        Matrix(const Matrix&);
+        //Matrix(const Matrix&);
         ~Matrix();
 
         Proxy operator[](int index)
@@ -49,18 +60,18 @@ class Matrix
             return Proxy(Data[index]);
         }
         void DeleteColumn(int);
-        void operator=(Matrix);
-        friend ostream& operator<<(ostream&,Matrix&);
-        friend istream& operator>>(istream&,Matrix&);
+        //void operator=(Matrix);
+        friend ostream& operator<< <>(ostream&,Matrix<T>&);
+        friend istream& operator>> <>(istream&,Matrix<T>&);
+
         Matrix operator+(Matrix&);
         Matrix operator-(Matrix&);
         Matrix operator*(Matrix&);
 
 };
 
-ostream& operator<<(ostream&,Matrix&);
-istream& operator>>(istream&,Matrix&);
 
+/*
 Matrix DeleteColumn(Matrix&,int);
 Matrix DeleteRow(Matrix&,int);
 double Diterminant(Matrix&);
@@ -71,11 +82,14 @@ void ExchangeRow(Matrix&,int,int);
 Matrix Transpose(Matrix&);
 Matrix AugmentMatrix(Matrix&,Matrix&);
 Matrix AugmentIdentity(Matrix&);
-Matrix GetIdentityMatrix(int);
+*/
+template<typename T=unsigned>
+Matrix<T> GetIdentityMatrix(int);
+/*
 Matrix Inverse(Matrix&);
 Matrix ReflectY(Matrix&);
 Matrix ReflectX(Matrix&);
-
+*/
 template<typename T>
 void Swap(T&,T&);
 

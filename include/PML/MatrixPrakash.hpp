@@ -1,7 +1,7 @@
 /********************************************/
 /** Author       : @PrakashGautam           */
 /** Date Written : Friday 31st May 2013     */
-/** Last Updated : 16 March 2014            */
+/** Last Updated : 16 March 2014,Aug 6,2015 */
 /********************************************/
 
 
@@ -12,51 +12,48 @@
 
 //
 
-Matrix::Matrix():Row(0),Col(0)
+template<typename T>
+ Matrix<T>::Matrix():Row(0),Col(0)
 {
     //cout<<"// now just row and col initialized to zero "<<endl;
 }
 
-Matrix::Matrix(int r,int c):Row(r),Col(c)
+template<typename T>
+ Matrix<T>::Matrix(int r,int c):Row(r),Col(c)
 {
-    Data=new double*[Row];
-    for(int row=0;row<Row;row++)
-        Data[row]=new double[Col];
+	//cout<<"Called me here now baby now"<<endl;
+    Data.reserve(Row);
+    for(int row=0;row<Row;row++){
+        vector<T> RowArray(Col);
+        Data.push_back(RowArray);
+    }
+
     //cout<<"// Constructed a new  "<<Row<<" by "<<Col<<endl;
 }
 
-
-Matrix::Matrix(const Matrix& M)
+/*
+template<typename T>
+ Matrix<T>::Matrix(const Matrix& M)
 {
-    Row=M.Row; Col=M.Col;
-    Data=new double*[Row];
-    for(int row=0;row<Row;row++)
-        Data[row]=new double[Col];
+    *this = M;
+
     for(int row=0;row<Row;row++)
         for(int col=0;col<Col;col++)
             Data[row][col]=M.Data[row][col];
+
     //cout<<"// Copied the matrix refrence "<<endl;
-}
+}*/
 
 
-Matrix::~Matrix()
+template<typename T>
+ Matrix<T>::~Matrix()
 {
-   if(Row>0 and Col>0)
-   {
-       //cout<<"// Freeing the memory ";
-        for(int i=0;i<Row;i++)
-            delete[] Data[i];
-        delete[]Data;
-   }
-   else
-		;
-        //cout<<"// WIthout freeing memory ";
-   //cout<<"// Destructed the matrix "<<Row<<" by "<<Col<<endl;
+
 }
 
 
-
-Matrix Matrix::operator*(Matrix& M)
+template<typename T>
+Matrix<T> Matrix<T>::operator*(Matrix& M)
 {
     int Row1=Row;
     int Row2=M.Row;
@@ -67,21 +64,23 @@ Matrix Matrix::operator*(Matrix& M)
         {
             Product[row][col]=0;
             for(int k=0;k<Row2;k++)
-                Product.Data[row][col]+= Data[row][k] * M[k][col];
+                Product.Data[row][col] += Data[row][k] * M[k][col];
         }
     return Product;
 }
 
-Matrix Matrix::operator+(Matrix&M)
+template<typename T>
+Matrix<T> Matrix<T>::operator+(Matrix&M)
 {
-    Matrix RM(Row,Col);
+    Matrix<T> RM(Row,Col);
     for(int i=0;i<Row;i++)
         for(int j=0;j<Col;j++)
-            RM[i][j]=Data[i][j]+M[i][j];
+            RM[i][j] = Data[i][j]+M[i][j];
     return RM;
 }
 
-Matrix Matrix::operator-(Matrix&M)
+template<typename T>
+Matrix<T> Matrix<T>::operator-(Matrix&M)
 {
     Matrix RM(Row,Col);
     for(int i=0;i<Row;i++)
@@ -90,8 +89,9 @@ Matrix Matrix::operator-(Matrix&M)
     return RM;
 }
 
-
-void Matrix::operator=(Matrix M)
+/*
+template<typename T>
+void  Matrix<T>::operator=(Matrix M)
 {
 
     if(Row>0 and Col>0)
@@ -114,21 +114,9 @@ void Matrix::operator=(Matrix M)
             Data[i][j]=M[i][j];
 
 }
-
-
-ostream& operator<<(ostream& op,Matrix&M)
-{
-    for(int row=0;row<M.Row;row++)
-    {
-        cout.precision(PRECISION);
-        for(int col=0;col<M.Col;col++)
-            cout<<setw(COLWIDTH)<<M[row][col]<<' ';
-        cout<<endl;
-    }
-    return op;
-}
-
-istream& operator>>(istream&ip,Matrix&M)
+*/
+template<class T>
+istream& operator>>(istream&ip,Matrix<T>& M)
 {
     for(int row=0;row<M.Row;row++)
     {
@@ -140,21 +128,26 @@ istream& operator>>(istream&ip,Matrix&M)
     return ip;
 }
 
-
-Matrix DeleteColumn(Matrix& M,int ColNo)
+template<class T>
+ostream& operator<<(ostream& op,Matrix<T>&M)
 {
-	/** \brief This is a brief description.
- *
- * \param	M The first parameter.
- * \param	ColNo The second parameter.
- * \return	Column deleted matrix.
- *
- * This is a detailed description.
- */
+    for(int row=0;row<M.Row;row++)
+    {
+        cout.precision(PRECISION);
+        for(int col=0;col<M.Col;col++)
+            cout<<setw(COLWIDTH)<<M[row][col]<<' ';
+        cout<<endl;
+    }
+    return op;
+}
+
+template<typename T>
+Matrix<T> DeleteColumn(Matrix<T>& M,int ColNo)
+{
     int p=0;
     int Row=M.Row;
     int Col=M.Col;
-    Matrix NewMatrix(Row,Col-1);
+    Matrix<T> NewMatrix(Row,Col-1);
     for(int row=0;row<Row;row++)
     {
         p=0;
@@ -168,13 +161,12 @@ Matrix DeleteColumn(Matrix& M,int ColNo)
     return NewMatrix;
 }
 
-
-
-Matrix DeleteRow(Matrix &M,int RowNo)
+template<typename T>
+Matrix<T> DeleteRow(Matrix<T> &M,int RowNo)
 {
     int Row=M.Row;
     int Col=M.Col;
-    Matrix ReturnArray(Row-1,Col);
+    Matrix<T> ReturnArray(Row-1,Col);
     int  p=0;
     for(int row=0;row<Row;row++)
         if(row!=RowNo)
@@ -186,19 +178,25 @@ Matrix DeleteRow(Matrix &M,int RowNo)
     return ReturnArray;
 }
 
-
-double Diterminant(Matrix& M)
+template<typename T>
+double Diterminant(Matrix<T>& M)
 {
+	if(M.Row != M.Col)
+	{
+		string Message =" Can't find diterminant of non square matrix ";
+		throw Message;
+	}
     int Col=M.Col;
+
     if(Col>1)
     {
         double det=0;
-        Matrix FirstRowDeleted=DeleteRow(M,0);
+        Matrix<T> FirstRowDeleted=DeleteRow(M,0);
         int Sign=1;
         for(int i=0; i<Col; i++)
         {
             float PivotElement=M[0][i];
-            Matrix SubMatrix=DeleteColumn(FirstRowDeleted,i);
+            Matrix<T> SubMatrix=DeleteColumn(FirstRowDeleted,i);
             det+=Sign*PivotElement*Diterminant(SubMatrix);
             Sign*=-1;
         }
@@ -208,7 +206,7 @@ double Diterminant(Matrix& M)
         return M[0][0];
 }
 
-
+/*
 void ConvertToDiagonal(Matrix&M)
 {
     int Row=M.Row;
@@ -271,19 +269,20 @@ void ExchangeColumn(Matrix&M,int Col1,int Col2)
     for(int cnt=0; cnt<Row; cnt++)
         Swap(M[cnt][Col1],M[cnt][Col2]);
 }
+*/
 
-
-
-Matrix Transpose(Matrix&M)
+template<typename T>
+Matrix<T> Transpose(Matrix<T>&M)
 {
     int Row=M.Row;
     int Col=M.Col;
-    Matrix Nm(Col,Row);
+    Matrix<T> Nm(Col,Row);
     for(int row=0;row<Row; row++)
         for(int col=0; col<Col; col++)
             Nm[col][row]=M[row][col];
     return Nm;
 }
+/*
 
 Matrix ReflectY(Matrix&Array)
 {
@@ -302,30 +301,36 @@ Matrix ReflectX(Matrix&Array)
 			ReturnArray[row][col]=Array[Array.Row-1-row][col];
 	return ReturnArray;
 }
-
-Matrix AugmentMatrix(Matrix& FirstMatrix,Matrix& SecondMatrix)
+*/
+template<typename T,typename S>
+Matrix<T> AugmentMatrix(Matrix<T>& FirstMatrix,Matrix<S>& SecondMatrix)
 {
 
-    int Row1=FirstMatrix.Row;
-    int Col1=FirstMatrix.Col;
-    int Col2=SecondMatrix.Col;
-    //if Row1 != Row2 display error message and end;
-    Matrix NewMatrix(Row1,Col1+Col2);
-    for(int row=0;row<Row1;row++)
+    int Row1 = FirstMatrix.Row;
+    int Row2 = SecondMatrix.Row;
+    int Col1 = FirstMatrix.Col;
+    int Col2 = SecondMatrix.Col;
+    if (Row1 != Row2){
+		string Message="Number of rows not equal";
+		throw Message;
+    }
+    Matrix<T> NewMatrix(Row1,Col1+Col2);
+    for(int row = 0;row < Row1; row++)
     {
-        for(int col=0;col<Col1;col++)
-            NewMatrix[row][col]=FirstMatrix[row][col];
+        for(int col = 0; col < Col1; col++)
+            NewMatrix[row][col] = FirstMatrix[row][col];
         for(int col=0;col<Col2;col++)
-            NewMatrix[row][Col1+col]=SecondMatrix[row][col];
+            NewMatrix[row][Col1+col] = SecondMatrix[row][col];
     }
     return NewMatrix;
 }
 
 
 
-Matrix GetIdentityMatrix(int Order)
+template<typename T=unsigned>
+Matrix<T> GetIdentityMatrix(int Order)
 {
-    Matrix NewMatrix(Order,Order);
+    Matrix<T> NewMatrix(Order,Order);
     double PivElem=0;
     for(int row=0; row<Order; row++)
         for(int col=0; col<Order; col++)
@@ -335,7 +340,7 @@ Matrix GetIdentityMatrix(int Order)
         }
     return NewMatrix;
 }
-
+/*
 Matrix AugmentIdentity(Matrix& Matrixi)
 {
     int Row=Matrixi.Row;
@@ -362,10 +367,10 @@ Matrix AugmentIdentity(Matrix& Matrixi)
     }
     return Nm;
 }
+*/
 
-
-Matrix Inverse(Matrix&M)/*Inverse by Gauss Jordan Method; Probably Not the Best Methods around to use*/
-{
+//Matrix Inverse(Matrix&M)/*Inverse by Gauss Jordan Method; Probably Not the Best Methods around to use*/
+/*{
     int Row=M.Row;
     int Order=Row;
     Matrix DupMat=AugmentIdentity(M);
@@ -377,7 +382,7 @@ Matrix Inverse(Matrix&M)/*Inverse by Gauss Jordan Method; Probably Not the Best 
             InverseMatrix[i][j-Order]=DupMat[i][j];
     return InverseMatrix;
 }
-
+*/
 
 
 template<typename T>

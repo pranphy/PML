@@ -2,12 +2,16 @@
 
 #include <iostream>
 #include <vector>
-
+#include<string>
 using namespace std;
 
 int main()
 {
-    Matrix M = GetIdentityMatrix(5);
-    cout<<M;
+	cout<<" Hellowest world s"<<endl;
+    Matrix<int> M(2,2);\
+    cin>>M;
+
+
+
     return 0;
 }
