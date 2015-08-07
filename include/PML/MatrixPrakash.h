@@ -1,7 +1,7 @@
 /*********************************************/
 /** Author       : @PrakashGautam            */
 /** Date Written : Friday 31st May 2013      */
-/** Last Updated : 16 March 2014,Aug 6, 2015 */
+/** Last Updated : 16 March 2014, Aug 6, 2015*/
 /*********************************************/
 
 /*
@@ -59,7 +59,7 @@ class Matrix
         {
             return Proxy(Data[index]);
         }
-        void DeleteColumn(int);
+
         //void operator=(Matrix);
         friend ostream& operator<< <>(ostream&,Matrix<T>&);
         friend istream& operator>> <>(istream&,Matrix<T>&);
@@ -68,27 +68,32 @@ class Matrix
         Matrix operator-(Matrix&);
         Matrix operator*(Matrix&);
 
+
+
+        void DeleteColumn(int);
+		void DeleteRow(int);
+		double Diterminant();
+
+		void ConvertToDiagonal();
+		void DivideByDiagonalElement();
+		void ConvertToUpperTrangular();
+
+		void ExchangeColumn(int,int);
+		void ExchangeRow(int,int);
+		void Transpose();
+		void AugmentMatrix(Matrix&);
+		void AugmentIdentity();
+
+		void Inverse();
+		void ReflectY();
+		void ReflectX();
+
 };
 
-
-/*
-Matrix DeleteColumn(Matrix&,int);
-Matrix DeleteRow(Matrix&,int);
-double Diterminant(Matrix&);
-void ConvertToDiagonal(Matrix&);
-void ConvertToUpperTrangular(Matrix&);
-void ExchangeColumn(Matrix&,int,int);
-void ExchangeRow(Matrix&,int,int);
-Matrix Transpose(Matrix&);
-Matrix AugmentMatrix(Matrix&,Matrix&);
-Matrix AugmentIdentity(Matrix&);
-*/
 template<typename T=unsigned>
 Matrix<T> GetIdentityMatrix(int);
 /*
-Matrix Inverse(Matrix&);
-Matrix ReflectY(Matrix&);
-Matrix ReflectX(Matrix&);
+
 */
 template<typename T>
 void Swap(T&,T&);

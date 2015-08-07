@@ -142,11 +142,9 @@ ostream& operator<<(ostream& op,Matrix<T>&M)
 }
 
 template<typename T>
-Matrix<T> DeleteColumn(Matrix<T>& M,int ColNo)
+void Matrix<T>::DeleteColumn(int ColNo)
 {
     int p=0;
-    int Row=M.Row;
-    int Col=M.Col;
     Matrix<T> NewMatrix(Row,Col-1);
     for(int row=0;row<Row;row++)
     {
@@ -154,161 +152,155 @@ Matrix<T> DeleteColumn(Matrix<T>& M,int ColNo)
         for(int col=0;col<Col;col++)
             if(ColNo!=col)
             {
-                NewMatrix[row][p]=M[row][col];
+                NewMatrix[row][p] = Data[row][col];
                 p++;
             }
     }
-    return NewMatrix;
+    *this =  NewMatrix;
 }
 
 template<typename T>
-Matrix<T> DeleteRow(Matrix<T> &M,int RowNo)
+void Matrix<T>::DeleteRow(int RowNo)
 {
-    int Row=M.Row;
-    int Col=M.Col;
     Matrix<T> ReturnArray(Row-1,Col);
     int  p=0;
     for(int row=0;row<Row;row++)
         if(row!=RowNo)
         {
             for(int col=0;col<Col;col++)
-                ReturnArray[p][col]=M[row][col];
+                ReturnArray[p][col]=Data[row][col];
             p++;
         }
-    return ReturnArray;
+    *this = ReturnArray;
 }
 
 template<typename T>
-double Diterminant(Matrix<T>& M)
+double Matrix<T>::Diterminant()
 {
-	if(M.Row != M.Col)
+	if(Row != Col)
 	{
-		string Message =" Can't find diterminant of non square matrix ";
+		string Message = " Can't find determinant of non square matrix ";
 		throw Message;
 	}
-    int Col=M.Col;
 
     if(Col>1)
     {
         double det=0;
-        Matrix<T> FirstRowDeleted=DeleteRow(M,0);
+		Matrix<T> FirstRowDeleted(*this);
+        FirstRowDeleted.DeleteRow(0);
         int Sign=1;
         for(int i=0; i<Col; i++)
         {
-            float PivotElement=M[0][i];
-            Matrix<T> SubMatrix=DeleteColumn(FirstRowDeleted,i);
-            det+=Sign*PivotElement*Diterminant(SubMatrix);
-            Sign*=-1;
+            float PivotElement=Data[0][i];
+            Matrix<T> SubMatrix(FirstRowDeleted);
+            SubMatrix.DeleteColumn(i);
+            det += Sign * PivotElement * SubMatrix.Diterminant();
+            Sign *= -1;
         }
         return det;
     }
     else
-        return M[0][0];
+        return Data[0][0];
 }
 
-/*
-void ConvertToDiagonal(Matrix&M)
+template<typename T>
+void Matrix<T>::ConvertToDiagonal()
 {
-    int Row=M.Row;
-    int Col=M.Col;
+
     for(int col=0; col<Row; col++)
         for(int row=0; row<Row; row++)
         {
-            double t=M[row][col],p=0;
+            double t = Data[row][col],p=0;
             for(int k=0; k<Col; k++)
                 if(row!=col)
-                    M[row][k]-=  M[col][k] / M[col][col] *t;
+                    Data[row][k] -=  Data[col][k] / Data[col][col] *t;
                     p=1;
         }
+	//*this = M;
 }
 
-
-void ConvertToUpperTrangular(Matrix&M)
+template<typename T>
+void Matrix<T>::ConvertToUpperTrangular()
 {
-    int Row=M.Row;
-    int Col=M.Col;
     for(int col=0; col<Row; col++)
         for(int row=0; row<Row; row++)
         {
-            double t=M[row][col],p=0;
+            double t=Data[row][col],p=0;
             for(int k=0; k<Col; k++)
                 if(row>col)
                 {
-                    M[row][k]-= M[col][k] / M[col][col]*t;
+                    Data[row][k]-= Data[col][k] / Data[col][col]*t;
                     p=1;
                 }
         }
 }
 
-
-void DivideByDiagonalElement(Matrix&M)
+template<typename T>
+void Matrix<T>::DivideByDiagonalElement()
 {
-    int Row=M.Row;
-    int Col=M.Col;
-
     for(int row=0; row<Row; row++)
     {
-        double PivotElement=M[row][row];
+        double PivotElement = Data[row][row];
         for(int col=0; col<Col; col++)
-            M[row][col]/=PivotElement;
+            Data[row][col] /= PivotElement;
     }
 }
 
 
 
-void ExchangeRow(Matrix&M,int Row1, int Row2)
+template<typename T>
+void  Matrix<T>:: ExchangeRow(int Row1, int Row2)
 {
-    int Col=M.Col;
+	if(Row1>Row or Row2 > Row) throw string("Row out of Bound");
     for(int cnt=0; cnt<Col; cnt++)
-        Swap(M[Row1][cnt],M[Row2][cnt]);
+        Swap(Data[Row1][cnt],Data[Row2][cnt]);
 }
-
-void ExchangeColumn(Matrix&M,int Col1,int Col2)
-{
-    int Row=M.Row;
-    for(int cnt=0; cnt<Row; cnt++)
-        Swap(M[cnt][Col1],M[cnt][Col2]);
-}
-*/
 
 template<typename T>
-Matrix<T> Transpose(Matrix<T>&M)
+void Matrix<T>:: ExchangeColumn(int Col1,int Col2)
 {
-    int Row=M.Row;
-    int Col=M.Col;
+    for(int cnt=0; cnt<Row; cnt++)
+        Swap(Data[cnt][Col1],Data[cnt][Col2]);
+}
+
+
+template<typename T>
+void Matrix<T>::Transpose()
+{
     Matrix<T> Nm(Col,Row);
     for(int row=0;row<Row; row++)
         for(int col=0; col<Col; col++)
-            Nm[col][row]=M[row][col];
-    return Nm;
-}
-/*
-
-Matrix ReflectY(Matrix&Array)
-{
-	Matrix ReturnArray(Array.Row,Array.Col);
-	for(int row=0;row<Array.Row;row++)
-		for(int col=0;col<Array.Col;col++)
-			ReturnArray[row][col]=Array[row][Array.Col-col-1];
-	return ReturnArray;
+            Nm[col][row]=Data[row][col];
+	*this = Nm;
 }
 
-Matrix ReflectX(Matrix&Array)
+template<typename T>
+void Matrix<T>::ReflectY()
 {
-	Matrix ReturnArray(Array.Row,Array.Col);
-	for(int row=0;row<Array.Row;row++)
-		for(int col=0;col<Array.Col;col++)
-			ReturnArray[row][col]=Array[Array.Row-1-row][col];
-	return ReturnArray;
+	Matrix<T> ReturnArray(Row,Col);
+	for(int row=0;row<Row;row++)
+		for(int col=0;col<Col;col++)
+			ReturnArray[row][col]=Data[row][Col-col-1];
+	*this = ReturnArray;
 }
-*/
-template<typename T,typename S>
-Matrix<T> AugmentMatrix(Matrix<T>& FirstMatrix,Matrix<S>& SecondMatrix)
+
+template<typename T>
+void Matrix<T>::ReflectX()
+{
+	Matrix<T> ReturnArray(Row,Col);
+	for(int row=0;row<Row;row++)
+		for(int col=0;col< Col;col++)
+			ReturnArray[row][col]=Data[Row-1-row][col];
+	*this = ReturnArray;
+}
+
+template<typename T>
+void Matrix<T>::AugmentMatrix(Matrix<T>& SecondMatrix)
 {
 
-    int Row1 = FirstMatrix.Row;
+    int Row1 = Row;
     int Row2 = SecondMatrix.Row;
-    int Col1 = FirstMatrix.Col;
+    int Col1 = Col;
     int Col2 = SecondMatrix.Col;
     if (Row1 != Row2){
 		string Message="Number of rows not equal";
@@ -318,11 +310,11 @@ Matrix<T> AugmentMatrix(Matrix<T>& FirstMatrix,Matrix<S>& SecondMatrix)
     for(int row = 0;row < Row1; row++)
     {
         for(int col = 0; col < Col1; col++)
-            NewMatrix[row][col] = FirstMatrix[row][col];
+            NewMatrix[row][col] = Data[row][col];
         for(int col=0;col<Col2;col++)
             NewMatrix[row][Col1+col] = SecondMatrix[row][col];
     }
-    return NewMatrix;
+    *this =  NewMatrix;
 }
 
 
@@ -340,14 +332,13 @@ Matrix<T> GetIdentityMatrix(int Order)
         }
     return NewMatrix;
 }
-/*
-Matrix AugmentIdentity(Matrix& Matrixi)
-{
-    int Row=Matrixi.Row;
-    int Col=Matrixi.Col;
 
+
+template<typename T>
+void Matrix<T>::AugmentIdentity()
+{
     int Order=Col;
-    Matrix Nm(Row,2*Col);
+    Matrix<T> Nm(Row,2*Col);
 
     for(int row=0; row<Order; row++)
     {
@@ -355,7 +346,7 @@ Matrix AugmentIdentity(Matrix& Matrixi)
         for(int col=0;col<Order; col++)
         {
             //copy the original
-            Nm[row][col]=Matrixi[row][col];
+            Nm[row][col] = Data[row][col];
             if(col==(Order-1))
                 for(int cnt=0; cnt<Order; cnt++)
                 {
@@ -365,24 +356,24 @@ Matrix AugmentIdentity(Matrix& Matrixi)
                 }
         }
     }
-    return Nm;
+    *this = Nm;
 }
-*/
 
-//Matrix Inverse(Matrix&M)/*Inverse by Gauss Jordan Method; Probably Not the Best Methods around to use*/
-/*{
-    int Row=M.Row;
-    int Order=Row;
-    Matrix DupMat=AugmentIdentity(M);
-    ConvertToDiagonal(DupMat);
-    DivideByDiagonalElement(DupMat);
-    Matrix InverseMatrix(Order,Order);
+
+template<typename T>
+void Matrix<T>::Inverse()/*Inverse by Gauss Jordan Method; Probably Not the Best Methods around to use*/
+{
+	int Order = Row;
+	Matrix<T> DupMat(*this);
+	DupMat.AugmentIdentity();
+    DupMat.ConvertToDiagonal();
+    DupMat.DivideByDiagonalElement();
+    //Matrix<T> InverseMatrix(Order,Order);
     for(int i=0;i<Order;i++)
         for(int j=Order;j<2*Order;j++)
-            InverseMatrix[i][j-Order]=DupMat[i][j];
-    return InverseMatrix;
+            Data[i][j-Order] = DupMat[i][j];
 }
-*/
+
 
 
 template<typename T>

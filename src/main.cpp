@@ -7,9 +7,13 @@ using namespace std;
 
 int main()
 {
+	typedef char Type;
 	cout<<" Hellowest world s"<<endl;
-    Matrix<int> M(2,2);\
+    Matrix<Type> M(3,3);
     cin>>M;
+    Matrix<Type> F(M);
+    Matrix<Type > Sum = F+M;
+    cout<<Sum<<endl;
 
 
 
