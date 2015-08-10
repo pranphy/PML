@@ -46,6 +46,7 @@ class Matrix
                 Proxy (vector<T>& Arra):Array(Arra){ }
                 T& operator[](int index){return Array[index];}
         };
+	protected:
         vector<vector<T>> Data;
 
     public:

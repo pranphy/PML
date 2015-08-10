@@ -15,7 +15,5 @@ int main()
     Matrix<Type > Sum = F+M;
     cout<<Sum<<endl;
 
-
-
     return 0;
 }
