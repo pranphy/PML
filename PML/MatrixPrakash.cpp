@@ -1,8 +1,8 @@
-/********************************************
- ** Author       : @PrakashGautam           *
- ** Date Written : Friday 31st May 2013     *
- ** Last Updated : July 25         2013     *
- ********************************************/
+/********************************************/
+/** Author       : @PrakashGautam           */
+/** Date Written : Friday 31st May 2013     */
+/** Last Updated : Jyly 25         2013     */
+/********************************************/
 
 #include "MatrixPrakash.h"
 
@@ -10,61 +10,61 @@
 #define PRECISION   0x002
 
 
-Matrix AllocateArray(int Row,int Col)
+float** AllocateArray(int Row,int Col)
 {
-    Matrix Matrixi=new float*[Row+1];
+    float**Matrix=new float*[Row+1];
     for(int i=1;i<Row+1;i++)
-        Matrixi[i]=new float[Col];
+        Matrix[i]=new float[Col];
     float*Bound=new float[2];
     Bound[0]=Row;
     Bound[1]=Col;
-    Matrixi[0]=Bound;
-    return Matrixi+1;
+    Matrix[0]=Bound;
+    return Matrix+1;
 }
 
-Matrix ConvertToLibraryArray(float*Array,int Row,int Col)
+float** ConvertToLibraryArray(float*Array,int Row,int Col)
 {
-    Matrix Matrixi=AllocateArray(Row,Col);
+    float**Matrix=AllocateArray(Row,Col);
     for(int row=0;row<Row;row++)
         for(int col=0;col<Col;col++)
-            Matrixi[row][col]=*(Array+row*Col+col);
-    return Matrixi;
+            Matrix[row][col]=*(Array+row*Col+col);
+    return Matrix;
 }
 
-void ReadMatrix(Matrix Matrixi)
+void ReadMatrix(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
     cout<<" Enter "<<Row<<" x "<<Col<<" Matrix ::"<<endl;
     for(int row=0; row<Row; row++)
     {
         cout<<"          Enter the "<<row+1<<"th row  : ";
         for(int col=0; col<Col; col++)
-            cin>>Matrixi[row][col];
+            cin>>Matrix[row][col];
     }
 }
 
 
-void DisplayMatrix(Matrix Matrixi)
+void DisplayMatrix(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
     cout<<"Matrix ::\n";
     cout.precision(PRECISION);
     for(int row=0; row<Row; row++)
     {
         for(int col=0; col<Col; col++)
-            cout<<setw(COLWIDTH)<<Matrixi[row][col];
+            cout<<setw(COLWIDTH)<<Matrix[row][col];
         cout<<endl;
     }
 }
 
 
-Matrix DeleteColumn(Matrix Matrixi,int ColNo)
+float** DeleteColumn(float**Matrix,int ColNo)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
-    Matrix ReturnArray=AllocateArray(Row,Col-1);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
+    float**ReturnArray=AllocateArray(Row,Col-1);
     int x=ColNo-1, p=0; //if x < 0 then display error message and exit (to be done later)
     for(int row=0;row<Row;row++)
     {
@@ -72,7 +72,7 @@ Matrix DeleteColumn(Matrix Matrixi,int ColNo)
         for(int col=0;col<Col;col++)
             if(x!=col)
             {
-                ReturnArray[row][p]=Matrixi[row][col];
+                ReturnArray[row][p]=Matrix[row][col];
                 p++;
             }
     }
@@ -80,35 +80,35 @@ Matrix DeleteColumn(Matrix Matrixi,int ColNo)
 }
 
 
-Matrix DeleteRow(Matrix Matrixi,int RowNo)
+float** DeleteRow(float**Matrix,int RowNo)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
-    Matrix ReturnArray=AllocateArray(Row-1,Col);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
+    float**ReturnArray=AllocateArray(Row-1,Col);
     int  p=0;
     for(int row=0;row<Row;row++)
         if(row!=(RowNo-1))
         {
             for(int col=0;col<Col;col++)
-                ReturnArray[p][col]=Matrixi[row][col];
+                ReturnArray[p][col]=Matrix[row][col];
             p++;
         }
     return ReturnArray;
 }
 
 
-float Diterminant(Matrix Matrixi)
+float Diterminant(float**Matrix)
 {
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
     if(Col>1)
     {
         float det=0;
-        Matrix FirstRowDeleted=DeleteRow(Matrixi,1);
-        Matrix SubMatrix;
+        float**FirstRowDeleted=DeleteRow(Matrix,1);
+        float**SubMatrix;
         int Sign=1;
         for(int i=0; i<Col; i++)
         {
-            float PivotElement=Matrixi[0][i];
+            float PivotElement=Matrix[0][i];
             SubMatrix=DeleteColumn(FirstRowDeleted,i+1);
             det+=Sign*PivotElement*Diterminant(SubMatrix);
             Sign*=-1;
@@ -118,18 +118,18 @@ float Diterminant(Matrix Matrixi)
         return det;
     }
     else
-        return **Matrixi;
+        return **Matrix;
 }
 
-Matrix MultiplyMatrix(Matrix FirstMatrix,Matrix SecondMatrix)
+float** MultiplyMatrix(float**FirstMatrix,float**SecondMatrix)
 {
-    int Row1=static_cast<int>(FirstMatrix[-1][0]);
+    int Row1=static_cast<int>(**(FirstMatrix-1));
     //int Col1=static_cast<int>(*(*(FirstMatrix-1)+1));
 
     int Row2=static_cast<int>(**(SecondMatrix-1));
     int Col2=static_cast<int>(*(*(SecondMatrix-1)+1));
 
-    Matrix Product=AllocateArray(Row1,Col2);
+    float** Product=AllocateArray(Row1,Col2);
     for(int row=0;row<Row1;row++)
         for(int col=0;col<Col2;col++)
         {
@@ -140,10 +140,10 @@ Matrix MultiplyMatrix(Matrix FirstMatrix,Matrix SecondMatrix)
     return Product;
 }
 
-Matrix DummyMatrix(int Row,int Col)
+float**DummyMatrix(int Row,int Col)
 {
     if(Col==-1) Col=Row;
-    Matrix Nm=AllocateArray(Row,Col);
+    float**Nm=AllocateArray(Row,Col);
     float Matrixe[]=    { 1,2,3,4,5,35,
                           2,3,4,5,1,45,
                           4,5,1,2,3,50,
@@ -163,30 +163,30 @@ Matrix DummyMatrix(int Row,int Col)
 }
 
 
-Matrix DuplicateMatrix(Matrix Matrixi)
+float**DuplicateMatrix(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
-    Matrix Nm=AllocateArray(Row,Col);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
+    float** Nm=AllocateArray(Row,Col);
     for(int row=0; row<Row; row++)
         for(int col=0;col<Col;col++)
-            Nm[row][col]=Matrixi[row][col];
+            Nm[row][col]=Matrix[row][col];
     return Nm;
 }
 
-void ConvertToDiagonal(Matrix Matrixi)
+void ConvertToDiagonal(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
 
     for(int col=0; col<Row; col++)
         for(int row=0; row<Row; row++)
         {
-            float t=Matrixi[row][col],p=0;
+            float t=Matrix[row][col],p=0;
             for(int k=0; k<Col; k++)
                 if(row!=col)
                 {
-                    Matrixi[row][k]-=  Matrixi[col][k] / Matrixi[col][col] *t;
+                    Matrix[row][k]-=  Matrix[col][k] / Matrix[col][col] *t;
                     p=1;
                 }
 //            if(p)
@@ -194,19 +194,19 @@ void ConvertToDiagonal(Matrix Matrixi)
         }
 }
 
-void ConvertToUpperTrangular(Matrix Matrixi)
+void ConvertToUpperTrangular(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
 
     for(int col=0; col<Row; col++)
         for(int row=0; row<Row; row++)
         {
-            float t=Matrixi[row][col],p=0;
+            float t=Matrix[row][col],p=0;
             for(int k=0; k<Col; k++)
                 if(row>col)
                 {
-                    Matrixi[row][k]-= Matrixi[col][k] / Matrixi[col][col]*t;
+                    Matrix[row][k]-= Matrix[col][k] / Matrix[col][col]*t;
                     p=1;
                 }
 //            if(p)
@@ -219,19 +219,19 @@ void ConvertToUpperTrangular(Matrix Matrixi)
 * to use the follwoing function to convert to lower trangular matrix. Sorry for the inconvenience
 */
 
-void ConvertToLowerTrangular(Matrix Matrixi)
+void ConvertToLowerTrangular(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
 
     for(int col=0; col<Col; col++)
         for(int row=0; row<Row; row++)
         {
-            float t=Matrixi[row][col],p=0;
+            float t=Matrix[row][col],p=0;
             for(int k=0; k<Col; k++)
                 if(col>row)
                 {
-                    Matrixi[row][k]-= Matrixi[col][k] / Matrixi[col][col]*t;
+                    Matrix[row][k]-= Matrix[col][k] / Matrix[col][col]*t;
                     p=1;
                 }
 //            if(p)
@@ -239,44 +239,44 @@ void ConvertToLowerTrangular(Matrix Matrixi)
         }
 }
 
-void DivideByDiagonalElement(Matrix Matrixi)
+void DivideByDiagonalElement(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
 
     for(int row=0; row<Row; row++)
     {
-        float PivotElement=Matrixi[row][row];
+        float PivotElement=Matrix[row][row];
         for(int col=0; col<Col; col++)
-            Matrixi[row][col]/=PivotElement;
+            Matrix[row][col]/=PivotElement;
     }
 }
 
-void ExchangeRow(Matrix Matrixi,int Row1, int Row2)
+void ExchangeRow(float**Matrix,int Row1, int Row2)
 {
-    //int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    //int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
     for(int cnt=0; cnt<Col; cnt++)
-        Swap(&Matrixi[Row1-1][cnt],&Matrixi[Row2-1][cnt] );
+        Swap(&Matrix[Row1-1][cnt],&Matrix[Row2-1][cnt] );
 }
 
-void ExchangeColumn(Matrix Matrixi,int Col1,int Col2)
+void ExchangeColumn(float**Matrix,int Col1,int Col2)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    //int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    //int Col=static_cast<int>(*(*(Matrix-1)+1));
     for(int cnt=0; cnt<Row; cnt++)
-        Swap(&Matrixi[cnt][Col1-1],&Matrixi[cnt][Col2-1]);
+        Swap(&Matrix[cnt][Col1-1],&Matrix[cnt][Col2-1]);
 }
 
-Matrix Transpose(Matrix Matrixi)
+float** Transpose(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
 
-    Matrix Nm=AllocateArray(Col,Row);
+    float**Nm=AllocateArray(Col,Row);
     for(int row=0;row<Row; row++)
         for(int col=0; col<Col; col++)
-            Nm[col][row]=Matrixi[row][col];
+            Nm[col][row]=Matrix[row][col];
     return Nm;
 }
 
@@ -290,9 +290,9 @@ void Swap(float*x,float*y)
 }
 
 
-Matrix GetIdentityMatrix(int Order)
+float**GetIdentityMatrix(int Order)
 {
-    Matrix NewMatrix=AllocateArray(Order,Order);
+    float** NewMatrix=AllocateArray(Order,Order);
     float PivElem=0;
     for(int row=0; row<Order; row++)
         for(int col=0; col<Order; col++)
@@ -303,7 +303,7 @@ Matrix GetIdentityMatrix(int Order)
     return NewMatrix;
 }
 
-Matrix AugmentMatrix(Matrix FirstMatrix,Matrix SecondMatrix)
+float**AugmentMatrix(float** FirstMatrix,float**SecondMatrix)
 {
 
     int Row1=static_cast<int>(**(FirstMatrix-1));
@@ -311,7 +311,7 @@ Matrix AugmentMatrix(Matrix FirstMatrix,Matrix SecondMatrix)
     //int Row2=static_cast<int>(**(SecondMatrix-1));
     int Col2=static_cast<int>(*(*(SecondMatrix-1)+1));
     //if Row1 != Row2 display error message and end;
-    Matrix NewMatrix=AllocateArray(Row1,Col1+Col2);
+    float** NewMatrix=AllocateArray(Row1,Col1+Col2);
     for(int row=0;row<Row1;row++)
     {
         for(int col=0;col<Col1;col++)
@@ -322,13 +322,13 @@ Matrix AugmentMatrix(Matrix FirstMatrix,Matrix SecondMatrix)
     return NewMatrix;
 }
 
-Matrix AugmentIdentity(Matrix Matrixi)
+float** AugmentIdentity(float**Matrix)
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    int Col=static_cast<int>(*(*(Matrix-1)+1));
 
     int Order=Col;
-    Matrix Nm=AllocateArray(Row,2*Col);
+    float**Nm=AllocateArray(Row,2*Col);
 
     for(int row=0; row<Order; row++)
     {
@@ -336,7 +336,7 @@ Matrix AugmentIdentity(Matrix Matrixi)
         for(int col=0;col<Order; col++)
         {
             //copy the original
-            Nm[row][col]=Matrixi[row][col];
+            Nm[row][col]=Matrix[row][col];
             if(col==(Order-1))
                 for(int cnt=0; cnt<Order; cnt++)
                 {
@@ -349,15 +349,15 @@ Matrix AugmentIdentity(Matrix Matrixi)
     return Nm;
 }
 
-Matrix Inverse(Matrix Matrixi)/*Inverse by Gauss Jordan Method; Probably Not the Best Methods aroudn to use*/
+float** Inverse(float**Matrix)/*Inverse by Gauss Jordan Method; Probably Not the Best Methods aroudn to use*/
 {
-    int Row=static_cast<int>(Matrixi[-1][0]);
-    //int Col=static_cast<int>(Matrixi[-1][1]);
+    int Row=static_cast<int>(**(Matrix-1));
+    //int Col=static_cast<int>(*(*(Matrix-1)+1));
     int Order=Row;
-    Matrix DupMat=AugmentIdentity(Matrixi);
+    float**DupMat=AugmentIdentity(Matrix);
     ConvertToDiagonal(DupMat);
     DivideByDiagonalElement(DupMat);
-    Matrix InverseMatrix=AllocateArray(Order,Order);
+    float**InverseMatrix=AllocateArray(Order,Order);
     for(int i=0;i<Order;i++)
         for(int j=Order;j<2*Order;j++)
             InverseMatrix[i][j-Order]=DupMat[i][j];

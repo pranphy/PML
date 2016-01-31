@@ -1,8 +1,8 @@
-/********************************************
- ** Author       : @PrakashGautam           *
- ** Date Written : Friday 31st May 2013     *
- ** Last Updated : July 25         2013     *
- ********************************************/
+/********************************************/
+/** Author       : @PrakashGautam           */
+/** Date Written : Friday 31st May 2013     */
+/** Last Updated : July 25         2013     */
+/********************************************/
 /*
 *   A proposed Matrix library to do various matrix operations that can be
 *   utilized to perform various mathematical operations. This library  is
@@ -14,14 +14,14 @@
 
 /*
 *   A library array is defined in this library as a array of reserved memroy
-*   which is similar to 2D array  in C++ the  difference  being it holds its
+*   which is similar to 2D array  in C++ the  difference  being it holds its 
 *   bounds as well. The bounds are stored in terms of the number of rows and
-*   columns. If float** Array  is  a  library  array  then,  This pointer to
+*   columns. If float** Array  is  a  library  array  then,  This pointer to 
 *   pointer  holds the  base  address of each row of array from 0th  to  Row
-*   but -1th  offset of this variable  contains the  pointer to array of tow
+*   but -1th  offset of this variable  contains the  pointer to array of tow 
 *   2 columns having Row and Column in the first and 2nd column respectively.
 *   ie if Bound[]={Row,Col};
-*   then Array[-1]= Bound; and Array[Row][Col] is normol 2d array in C++
+*   then Array[-1]= Bound; and Array[Row][Col] is normol 2d array in C++  
 */
 
 #ifndef MATRIXPRAKASH_H_INCLUDED
@@ -32,7 +32,6 @@
 #include<iostream>
 using namespace std;
 
-typedef float** Matrix;
 
 float** AllocateArray            (int,int=-1);
 float** ConvertToLibraryArray    (float*,int,int);
