@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-/********************************************/
-/** Author       : @PrakashGautam           */
-/** Date Written : Friday 31st May 2013     */
-/** Last Updated : 16 March 2014            */
-/********************************************/
-=======
 /*********************************************/
 /** Author       : @PrakashGautam            */
 /** Date Written : Friday 31st May 2013      */
 /** Last Updated : 16 March 2014, Aug 6, 2015*/
 /*********************************************/
->>>>>>> Generic
 
 /*
 *   A proposed Matrix library to do various matrix operations that can be
@@ -39,16 +31,10 @@ class Matrix;
 template<class T>
 ostream& operator<<(ostream&,Matrix<T>&);
 
-<<<<<<< HEAD
-
-
-
-=======
 template<class T>
 istream& operator>>(istream&,Matrix<T>&);
 
 template<typename T>
->>>>>>> Generic
 class Matrix
 {
     private:
