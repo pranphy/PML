@@ -1,5 +1,5 @@
 /********************************************/
-/** Author       : @PrakashGautam           */
+/** Author       : @Prakash           */
 /** Date Written : Friday 31st May 2013     */
 /** Last Updated : 16 March 2014,Aug 6,2015 */
 /********************************************/
@@ -210,11 +210,10 @@ void Matrix<T>::ConvertToDiagonal()
     for(int col=0; col<Row; col++)
         for(int row=0; row<Row; row++)
         {
-            double t = Data[row][col],p=0;
+            double t = Data[row][col];
             for(int k=0; k<Col; k++)
                 if(row!=col)
                     Data[row][k] -=  Data[col][k] / Data[col][col] *t;
-                    p=1;
         }
 	//*this = M;
 }
@@ -269,9 +268,11 @@ void Matrix<T>::Transpose()
 {
     Matrix<T> Nm(Col,Row);
     for(int row=0;row<Row; row++)
+    {
         for(int col=0; col<Col; col++)
             Nm[col][row]=Data[row][col];
-	*this = Nm;
+    }
+    *this = Nm;
 }
 
 template<typename T>
