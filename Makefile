@@ -6,10 +6,6 @@ BINDIR   = bin
 LIBDIR   = lib
 EXEFILE  = UpdatePML 
 
-
-
-
-
 #Source Files to looks for
 SOURCES := $(wildcard $(SRCDIRS:%=src/%/*.cpp)) $(wildcard src/*.cpp)
 
@@ -54,8 +50,6 @@ $(DEXE) : $(DOBJECTS) | $(DBINDIR)
 
 $(DOBJDIR)/%.o: $(SRCDIR)/%.cpp | $(DOBJDIR)
 	$(CXX) -o $@ -c $< $(DFLAG) $(CXXFLAGS)
-
-
 
 
 Release: $(REXE)
