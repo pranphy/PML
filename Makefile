@@ -5,6 +5,7 @@ OBJDIR   = obj
 BINDIR   = bin
 LIBDIR   = lib
 EXEFILE  = UpdatePML 
+PREFIX=~/MyRoot/usr
 
 #Source Files to looks for
 SOURCES := $(wildcard $(SRCDIRS:%=src/%/*.cpp)) $(wildcard src/*.cpp)
@@ -81,6 +82,10 @@ $(RBINDIR): | $(BINDIR)
 $(ROBJDIR): | $(OBJDIR)
 	mkdir $(ROBJDIR) $(SRCDIRS:%=$(ROBJDIR)/%)
 
+install:
+	rm -rf $(PREFIX)/include/PML
+	mkdir -p $(PREFIX)/include
+	cp -r include/PML $(PREFIX)/include/
 
 clean:
 	rm -rf $(DOBJECTS) $(DEXE)
@@ -90,6 +95,8 @@ cleanDebug:
 
 cleanRelease:
 	rm $(ROBJECTS) $(REXE)
+
+
 
 ## Include auto-generated dependencies rules
 -include $(DOBJECTS:.o=.d)
