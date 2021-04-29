@@ -1,9 +1,7 @@
 /********************************************/
-/** Author       : @Prakash           */
+/** Author       : @Prakash                 */
 /** Date Written : Friday 31st May 2013     */
-/** Last Updated : 16 March 2014,Aug 6,2015 */
 /********************************************/
-
 
 #include "MatrixPrakash.h"
 
@@ -15,20 +13,20 @@
 template<typename T>
  Matrix<T>::Matrix():Row(0),Col(0)
 {
-    //cout<<"// now just row and col initialized to zero "<<endl;
+    //std::cout<<"// now just row and col initialized to zero "<<std::endl;
 }
 
 template<typename T>
  Matrix<T>::Matrix(int r,int c):Row(r),Col(c)
 {
-	//cout<<"Called me here now baby now"<<endl;
+    //std::cout<<"Called me here now baby now"<<std::endl;
     Data.reserve(Row);
     for(int row=0;row<Row;row++){
         vector<T> RowArray(Col);
         Data.push_back(RowArray);
     }
 
-    //cout<<"// Constructed a new  "<<Row<<" by "<<Col<<endl;
+    //std::cout<<"// Constructed a new  "<<Row<<" by "<<Col<<std::endl;
 }
 
 /*
@@ -41,7 +39,7 @@ template<typename T>
         for(int col=0;col<Col;col++)
             Data[row][col]=M.Data[row][col];
 
-    //cout<<"// Copied the matrix refrence "<<endl;
+    //std::cout<<"// Copied the matrix refrence "<<std::endl;
 }*/
 
 
@@ -96,14 +94,14 @@ void  Matrix<T>::operator=(Matrix M)
 
     if(Row>0 and Col>0)
     {
-        //cout<<"// Freed and ";
+        //std::cout<<"// Freed and ";
         for(int i=0;i<Row;i++)
             delete[]Data[i];
         delete[]Data;
     }
     else
-        //cout<<"// WIthout needin to free ";
-    //cout<<"// copied the matrix with = "<<endl;
+        //std::cout<<"// WIthout needin to free ";
+    //std::cout<<"// copied the matrix with = "<<std::endl;
     Row=M.Row;
     Col=M.Col;
     Data=new double*[Row];
@@ -120,11 +118,11 @@ istream& operator>>(istream&ip,Matrix<T>& M)
 {
     for(int row=0;row<M.Row;row++)
     {
-        cout<<"Enter "<<row+1<<"th row  :- ";
+        std::cout<<"Enter "<<row+1<<"th row  :- ";
         for(int col=0;col<M.Col;col++)
-            cin>>M[row][col];
+            std::cin>>M[row][col];
     }
-    cout<<endl;
+    std::cout<<std::endl;
     return ip;
 }
 
@@ -135,8 +133,8 @@ ostream& operator<<(ostream& op,Matrix<T>&M)
     {
         cout.precision(PRECISION);
         for(int col=0;col<M.Col;col++)
-            cout<<setw(COLWIDTH)<<M[row][col]<<' ';
-        cout<<endl;
+            std::cout<<setw(COLWIDTH)<<M[row][col]<<' ';
+        std::cout<<std::endl;
     }
     return op;
 }
@@ -177,16 +175,16 @@ void Matrix<T>::DeleteRow(int RowNo)
 template<typename T>
 double Matrix<T>::Diterminant()
 {
-	if(Row != Col)
-	{
-		string Message = " Can't find determinant of non square matrix ";
-		throw Message;
-	}
+    if(Row != Col)
+    {
+        string Message = " Can't find determinant of non square matrix ";
+        throw Message;
+    }
 
     if(Col>1)
     {
         double det=0;
-		Matrix<T> FirstRowDeleted(*this);
+        Matrix<T> FirstRowDeleted(*this);
         FirstRowDeleted.DeleteRow(0);
         int Sign=1;
         for(int i=0; i<Col; i++)
@@ -215,7 +213,7 @@ void Matrix<T>::ConvertToDiagonal()
                 if(row!=col)
                     Data[row][k] -=  Data[col][k] / Data[col][col] *t;
         }
-	//*this = M;
+    //*this = M;
 }
 
 template<typename T>
@@ -250,7 +248,7 @@ void Matrix<T>::DivideByDiagonalElement()
 template<typename T>
 void  Matrix<T>:: ExchangeRow(int Row1, int Row2)
 {
-	if(Row1>Row or Row2 > Row) throw string("Row out of Bound");
+    if(Row1>Row or Row2 > Row) throw string("Row out of Bound");
     for(int cnt=0; cnt<Col; cnt++)
         Swap(Data[Row1][cnt],Data[Row2][cnt]);
 }
@@ -278,21 +276,21 @@ void Matrix<T>::Transpose()
 template<typename T>
 void Matrix<T>::ReflectY()
 {
-	Matrix<T> ReturnArray(Row,Col);
-	for(int row=0;row<Row;row++)
-		for(int col=0;col<Col;col++)
-			ReturnArray[row][col]=Data[row][Col-col-1];
-	*this = ReturnArray;
+    Matrix<T> ReturnArray(Row,Col);
+    for(int row=0;row<Row;row++)
+        for(int col=0;col<Col;col++)
+            ReturnArray[row][col]=Data[row][Col-col-1];
+    *this = ReturnArray;
 }
 
 template<typename T>
 void Matrix<T>::ReflectX()
 {
-	Matrix<T> ReturnArray(Row,Col);
-	for(int row=0;row<Row;row++)
-		for(int col=0;col< Col;col++)
-			ReturnArray[row][col]=Data[Row-1-row][col];
-	*this = ReturnArray;
+    Matrix<T> ReturnArray(Row,Col);
+    for(int row=0;row<Row;row++)
+        for(int col=0;col< Col;col++)
+            ReturnArray[row][col]=Data[Row-1-row][col];
+    *this = ReturnArray;
 }
 
 template<typename T>
@@ -304,8 +302,8 @@ void Matrix<T>::AugmentMatrix(Matrix<T>& SecondMatrix)
     int Col1 = Col;
     int Col2 = SecondMatrix.Col;
     if (Row1 != Row2){
-		string Message="Number of rows not equal";
-		throw Message;
+        string Message="Number of rows not equal";
+        throw Message;
     }
     Matrix<T> NewMatrix(Row1,Col1+Col2);
     for(int row = 0;row < Row1; row++)
@@ -320,7 +318,7 @@ void Matrix<T>::AugmentMatrix(Matrix<T>& SecondMatrix)
 
 
 
-template<typename T=unsigned>
+template<typename T>
 Matrix<T> GetIdentityMatrix(int Order)
 {
     Matrix<T> NewMatrix(Order,Order);
@@ -364,9 +362,9 @@ void Matrix<T>::AugmentIdentity()
 template<typename T>
 void Matrix<T>::Inverse()/*Inverse by Gauss Jordan Method; Probably Not the Best Methods around to use*/
 {
-	int Order = Row;
-	Matrix<T> DupMat(*this);
-	DupMat.AugmentIdentity();
+    int Order = Row;
+    Matrix<T> DupMat(*this);
+    DupMat.AugmentIdentity();
     DupMat.ConvertToDiagonal();
     DupMat.DivideByDiagonalElement();
     //Matrix<T> InverseMatrix(Order,Order);

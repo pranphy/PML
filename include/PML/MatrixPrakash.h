@@ -1,7 +1,6 @@
 /*********************************************/
 /** Author       : @PrakashGautam            */
 /** Date Written : Friday 31st May 2013      */
-/** Last Updated : 16 March 2014, Aug 6, 2015*/
 /*********************************************/
 
 /*
@@ -12,7 +11,6 @@
 *   You can distribute it for free or  even  use it  for   your commercial
 *   purpose. It is just aimed at helping programmers make life a bit easy.
 */
-
 
 
 #ifndef MATRIX_H_INCLUDED
@@ -46,7 +44,7 @@ class Matrix
                 Proxy (vector<T>& Arra):Array(Arra){ }
                 T& operator[](int index){return Array[index];}
         };
-	protected:
+    protected:
         vector<vector<T>> Data;
 
     public:
@@ -72,22 +70,22 @@ class Matrix
 
 
         void DeleteColumn(int);
-		void DeleteRow(int);
-		double Diterminant();
+        void DeleteRow(int);
+        double Diterminant();
 
-		void ConvertToDiagonal();
-		void DivideByDiagonalElement();
-		void ConvertToUpperTrangular();
+        void ConvertToDiagonal();
+        void DivideByDiagonalElement();
+        void ConvertToUpperTrangular();
 
-		void ExchangeColumn(int,int);
-		void ExchangeRow(int,int);
-		void Transpose();
-		void AugmentMatrix(Matrix&);
-		void AugmentIdentity();
+        void ExchangeColumn(int,int);
+        void ExchangeRow(int,int);
+        void Transpose();
+        void AugmentMatrix(Matrix&);
+        void AugmentIdentity();
 
-		void Inverse();
-		void ReflectY();
-		void ReflectX();
+        void Inverse();
+        void ReflectY();
+        void ReflectX();
 
 };
 
@@ -98,6 +96,5 @@ Matrix<T> GetIdentityMatrix(int);
 */
 template<typename T>
 void Swap(T&,T&);
-#include "MatrixPrakash.hpp"
 
 #endif // MATRIX_H_INCLUDED

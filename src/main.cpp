@@ -1,20 +1,18 @@
-#include"PML/MatrixPrakash.h"
+#include"PML/MatrixPrakash.hpp"
 
 #include <iostream>
 #include <vector>
-#include<string>
-using namespace std;
+#include <string>
 
 int main()
 {
-	typedef char Type;
-	cout<<" This is fun "<<endl;
-	cout<<" Hellowest world s"<<endl;
+    typedef char Type;
+    std::cout<<"This is fun "<<std::endl;
+    std::cout<<"Hellowest world s"<<std::endl;
     Matrix<Type> M(3,3);
-    cin>>M;
+    std::cin>>M;
     Matrix<Type> F(M);
     Matrix<Type> Sum = F+M;
-    cout<<Sum<<endl;
-
+    std::cout<<Sum<<std::endl;
     return 0;
 }
